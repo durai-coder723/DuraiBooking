@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DURAI BOOKING SITE</title>
+  <!-- html2pdf Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #111;
+      margin: 0;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .header {
+      text-align: center;
+      background: #1e3a8a;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .header p {
+      margin: 6px 0 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .user-box {
+      background: #f8fafc;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 2px solid #cbd5e1;
+    }
+
+    .user-box label {
+      display: block;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .user-box input {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border: 2px solid #94a3b8;
+      border-radius: 6px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+
+    .category-title {
+      background: #0d9488;
+      color: white;
+      padding: 12px 15px;
+      font-size: 22px;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-title img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    .item-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      background: #fff;
+      gap: 15px;
+    }
+
+    .item-img {
+      width: 85px;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .item-info {
+      flex: 2;
+    }
+
+    .item-name {
+      font-weight: bold;
+      font-size: 20px;
+      color: #0f172a;
+    }
+
+    .item-price {
+      font-size: 20px;
+      color: #b91c1c;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-qty {
+      width: 45px;
+      height: 45px;
+      font-size: 24px;
+      font-weight: bold;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-qty.danger {
+      background-color: #dc2626;
+    }
+
+    .qty-input {
+      width: 65px;
+      height: 40px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      border: 2px solid #94a3b8;
+      border-radius: 6px;
+      color: #0f172a;
+      padding: 2px;
+    }
+
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .item-total {
+      font-size: 22px;
+      font-weight: 900;
+      color: #15803d;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .footer-bar {
+      position: sticky;
+      bottom: 0;
+      background: #ffffff;
+      padding: 15px 20px;
+      border-top: 4px solid #1e3a8a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .grand-total {
+      font-size: 26px;
+      font-weight: 900;
+      color: #15803d;
+    }
+
+    .btn-action {
+      background-color: #15803d;
+      color: white;
+      padding: 14px 24px;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    /* Modals */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      width: 92%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .summary-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Payment Methods */
+    .payment-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 120px;
+    }
+
+    .tab-btn.active {
+      background: #1e3a8a;
+      color: white;
+      border-color: #1e3a8a;
+    }
+
+    .payment-panel {
+      display: none;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .payment-panel.active {
+      display: block;
+    }
+
+    .upi-options {
+      display: flex;
+      gap: 10px;
+      justify-content: space-around;
+      margin: 15px 0;
+    }
+
+    .upi-badge {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #1e3a8a;
+      cursor: pointer;
+    }
+
+    /* Success Screen */
+    .success-box {
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: white;
+      font-size: 50px;
+      line-height: 80px;
+      margin: 0 auto 15px;
+      animation: popIn 0.4s ease-in-out;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* Printer Animation Styling */
+    .printer-container {
+      position: relative;
+      width: 240px;
+      height: 180px;
+      margin: 20px auto;
+    }
+
+    .printer-body {
+      position: absolute;
+      top: 40px;
+      width: 240px;
+      height: 100px;
+      background: #334155;
+      border-radius: 12px 12px 0 0;
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .printer-slot {
+      position: absolute;
+      bottom: 25px;
+      left: 20px;
+      width: 200px;
+      height: 8px;
+      background: #0f172a;
+      border-radius: 4px;
+    }
+
+    .printer-light {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+      animation: blink 0.6s infinite alternate;
+    }
+
+    @keyframes blink {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+
+    .paper {
+      position: absolute;
+      top: 50px;
+      left: 35px;
+      width: 170px;
+      height: 110px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 1;
+      padding: 10px;
+      box-sizing: border-box;
+      animation: printOut 2s ease-in-out forwards;
+    }
+
+    .paper-line {
+      height: 6px;
+      background: #e2e8f0;
+      margin-bottom: 8px;
+      border-radius: 3px;
+    }
+
+    @keyframes printOut {
+      0% { transform: translateY(-40px); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(75px); opacity: 1; }
+    }
+
+    /* Hidden Container for capturing PDF */
+    #pdf-container {
+      display: none;
+    }
+
+    /* Print & PDF Single Page Layout Optimizations */
+    #pdf-printable {
+      width: 680px;
+      padding: 15px;
+      background: #ffffff;
+      font-family: Arial, sans-serif;
+      color: #000;
+      box-sizing: border-box;
+    }
+
+    .pdf-header {
+      text-align: center;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    .pdf-header h2 {
+      margin: 0;
+      color: #1e3a8a;
+      font-size: 20px;
+    }
+
+    .pdf-header p {
+      margin: 2px 0 0 0;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .pdf-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin-bottom: 8px;
+      background: #f8fafc;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 5px;
+    }
+
+    .pdf-table th, .pdf-table td {
+      border: 1px solid #94a3b8;
+      padding: 4px 6px;
+      text-align: left;
+      font-size: 10px;
+    }
+
+    .pdf-table th {
+      background: #1e3a8a;
+      color: white;
+      font-size: 11px;
+    }
+
+    .pdf-summary {
+      text-align: right;
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #15803d;
+      border-top: 1px dashed #94a3b8;
+      padding-top: 4px;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+      body * {
+        visibility: hidden;
+      }
+      #pdf-printable, #pdf-printable * {
+        visibility: visible;
+      }
+      #pdf-printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>DURAI BOOKING SITE</h1>
+    <p>Contact: 9791257989</p>
+  </div>
+
+  <div class="user-box">
+    <label for="cust-name">Customer Name:</label>
+    <input type="text" id="cust-name" placeholder="Enter full name (Optional)">
+
+    <label for="cust-phone">Phone Number:</label>
+    <input type="tel" id="cust-phone" placeholder="Enter phone number (Optional)">
+  </div>
+
+  <div id="product-list"></div>
+
+  <div class="footer-bar">
+    <div class="grand-total">
+      Total: ₹<span id="grand-total-val">0</span>
+    </div>
+    <button class="btn-action" onclick="openConfirmationModal()">Review Order</button>
+  </div>
+</div>
+
+<!-- Step 1: Confirmation Modal -->
+<div class="modal" id="confirm-modal">
+  <div class="modal-content">
+    <h2 style="color: #1e3a8a; margin-top:0;">1. Order Confirmation</h2>
+    <div id="modal-cust-info" style="margin-bottom:15px; background: #f1f5f9; padding:10px; border-radius:6px;"></div>
+    
+    <div id="modal-summary-list"></div>
+
+    <div style="text-align: right; margin-top: 15px; font-size: 24px; font-weight: 900; color: #15803d;">
+      Total Amount: ₹<span id="modal-grand-total">0</span>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn-action" style="background:#64748b; flex:1;" onclick="closeModal('confirm-modal')">Back to Edit</button>
+      <button class="btn-action" style="flex:1;" onclick="goToPayment()">Proceed to Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Step 2: Payment Modal -->
+<div class="modal" id="payment-modal">
+  <div class="modal-content">
+    <h2 style="color: #1e3a8a; margin-top:0;">2. Choose Payment Method</h2>
+    <p style="font-size:22px; font-weight:bold; color:#15803d;">Amount Payable: ₹<span id="pay-amount">0</span></p>
+
+    <div class="payment-tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'upi')">GPay / UPI / QR</button>
+      <button class="tab-btn" onclick="switchTab(event, 'card')">Credit/Debit Card</button>
+      <button class="tab-btn" onclick="switchTab(event, 'net')">NetBanking</button>
+      <button class="tab-btn" onclick="switchTab(event, 'coupon')">Discount Coupon</button>
+    </div>
+
+    <!-- UPI Panel -->
+    <div class="payment-panel active" id="tab-upi">
+      <p style="margin:0 0 10px;"><b>Quick Pay via Apps:</b></p>
+      <div class="upi-options">
+        <div class="upi-badge">Google Pay</div>
+        <div class="upi-badge">PhonePe</div>
+        <div class="upi-badge">Paytm</div>
+      </div>
+      <p style="text-align:center; margin:10px 0 5px;">Or Scan UPI QR Code:</p>
+      <div style="text-align:center; margin-bottom:10px;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=9791257989@upi" alt="Payment QR">
+      </div>
+      <input type="text" id="upi-id" class="user-box" style="margin:0; width:100%;" placeholder="Enter UPI ID (e.g. mobile@upi)">
+    </div>
+
+    <!-- Card Panel -->
+    <div class="payment-panel" id="tab-card">
+      <input type="text" class="user-box" style="width:100%;" placeholder="Card Number (16 Digits)" maxlength="16">
+      <div style="display:flex; gap:10px;">
+        <input type="text" class="user-box" style="flex:1;" placeholder="MM/YY" maxlength="5">
+        <input type="password" class="user-box" style="flex:1;" placeholder="CVV" maxlength="3">
+      </div>
+    </div>
+
+    <!-- Net Banking Panel -->
+    <div class="payment-panel" id="tab-net">
+      <label style="display:block; margin-bottom:5px; font-weight:bold;">Select Bank:</label>
+      <select class="user-box" style="width:100%; height:48px;">
+        <option>State Bank of India (SBI)</option>
+        <option>HDFC Bank</option>
+        <option>ICICI Bank</option>
+        <option>Axis Bank</option>
+        <option>Kotak Mahindra Bank</option>
+      </select>
+    </div>
+
+    <!-- Coupon Panel -->
+    <div class="payment-panel" id="tab-coupon">
+      <p style="margin:0 0 5px;">Use coupon code <b>DURAI10</b> to get 10% discount:</p>
+      <div style="display:flex; gap:10px;">
+        <input type="text" id="coupon-code" class="user-box" placeholder="Enter Code" style="margin:0; flex:1;">
+        <button class="btn-action" style="padding:10px 20px;" onclick="applyCoupon()">Apply</button>
+      </div>
+      <p id="coupon-msg" style="margin:8px 0 0; font-size:16px; font-weight:bold;"></p>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn-action" style="background:#64748b; flex:1;" onclick="closeModal('payment-modal')">Cancel</button>
+      <button class="btn-action" style="flex:1;" id="pay-btn" onclick="processPayment()">Complete Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Step 3: Success Modal -->
+<div class="modal" id="success-modal">
+  <div class="modal-content success-box">
+    <div class="checkmark">✓</div>
+    <h2 style="color:#15803d; margin:0 0 10px;">Payment Successful!</h2>
+    <p style="font-size: 18px; color: #475569;">Transaction ID: <b id="trx-id">PAY-123456</b></p>
+    <p style="font-size: 18px; margin-bottom: 25px;">Your order receipt is ready.</p>
+    
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-action" onclick="triggerPrintProcess('download')">📥 Download PDF</button>
+      <button class="btn-action" style="background:#0284c7;" onclick="triggerPrintProcess('print')">🖨️ Print Receipt</button>
+    </div>
+    <button class="btn-action" style="background:#64748b; margin-top:15px;" onclick="closeModal('success-modal')">Close</button>
+  </div>
+</div>
+
+<!-- Step 4: Printer Animation Modal -->
+<div class="modal" id="printer-modal">
+  <div class="modal-content" style="text-align:center;">
+    <h3 style="color:#1e3a8a; margin:0;" id="print-status-title">Printing Document...</h3>
+    
+    <div class="printer-container">
+      <div class="printer-body">
+        <div class="printer-light"></div>
+        <div class="printer-slot"></div>
+      </div>
+      <div class="paper">
+        <div class="paper-line" style="width:70%;"></div>
+        <div class="paper-line" style="width:90%;"></div>
+        <div class="paper-line" style="width:40%;"></div>
+        <div class="paper-line" style="width:80%;"></div>
+      </div>
+    </div>
+    
+    <p style="color:#64748b; font-weight:bold;">Generating receipt details...</p>
+  </div>
+</div>
+
+<!-- Container for PDF rendering -->
+<div id="pdf-container">
+  <div id="pdf-printable">
+    <div class="pdf-header">
+      <h2>DURAI BOOKING SITE</h2>
+      <p>Contact: 9791257989 | Official Order Receipt</p>
+    </div>
+    <div class="pdf-meta" id="pdf-cust-details"></div>
+    
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Item Name</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-table-body"></tbody>
+    </table>
+
+    <div class="pdf-summary" id="pdf-total"></div>
+  </div>
+</div>
+
+<script>
+// Generic Section Category Images
+const categoryImages = {
+  "Lakshmi Crackers": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=200&q=80",
+  "Thandar Crackers": "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=200&q=80",
+  "Deluxe Crackers": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80",
+  "Bijili Crackers": "https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=200&q=80",
+  "Wala": "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=200&q=80",
+  "Flash (bomb) Rops And Candles": "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=200&q=80",
+  "Chakkar": "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=200&q=80",
+  "Flower Pots": "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=200&q=80",
+  "Rocket": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80",
+  "Stones": "https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=200&q=80",
+  "Wishlers": "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=200&q=80",
+  "Sky Display": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80",
+  "Repeating Shots": "https://images.unsplash.com/photo-1498931299472-f7a63a5a1cfa?w=200&q=80",
+  "Repeating Shots SPECIAL": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80",
+  "Fountain & Novelty Items": "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=200&q=80",
+  "Sparklers": "https://images.unsplash.com/photo-1531306728370-e2ebd9d7bb99?w=200&q=80",
+  "Kids Special": "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=200&q=80",
+  "Paper Bomb": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=200&q=80",
+  "Gift Box": "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=200&q=80"
+};
+
+const products = [
+  // Lakshmi Crackers
+  { id: 1, name: "4\" joker", unit: "1 packet", price: 18, category: "Lakshmi Crackers" },
+  { id: 2, name: "3.5 Inch Lakshmi", unit: "1 BOX", price: 12, category: "Lakshmi Crackers" },
+  { id: 3, name: "4 Inch Hulk", unit: "1 BOX", price: 20, category: "Lakshmi Crackers" },
+  { id: 4, name: "4 inch deluxe Hulk", unit: "1 BOX", price: 24, category: "Lakshmi Crackers" },
+  { id: 5, name: "4 Inch Mega Deluxe Hulk", unit: "1 BOX", price: 32, category: "Lakshmi Crackers" },
+  { id: 6, name: "2.75 Inch Kuruvi", unit: "1 BOX", price: 5, category: "Lakshmi Crackers" },
+
+  // Thandar Crackers
+  { id: 7, name: "28 Chorsa", unit: "1 BOX", price: 12, category: "Thandar Crackers" },
+  { id: 8, name: "28 Giant", unit: "1 BOX", price: 20, category: "Thandar Crackers" },
+  { id: 9, name: "56 Giant", unit: "1 BOX", price: 40, category: "Thandar Crackers" },
+
+  // Deluxe Crackers
+  { id: 10, name: "24 Deluxe", unit: "1 BOX", price: 44, category: "Deluxe Crackers" },
+
+  // Bijili Crackers
+  { id: 11, name: "Red Bijili", unit: "1 BOX", price: 15, category: "Bijili Crackers" },
+  { id: 12, name: "Stripped Bijili", unit: "1 BOX", price: 25, category: "Bijili Crackers" },
+
+  // Wala
+  { id: 13, name: "100 Wala", unit: "1 Box", price: 25, category: "Wala" },
+  { id: 14, name: "200 Wala", unit: "1 BOX", price: 50, category: "Wala" },
+  { id: 15, name: "600 Wala", unit: "1 Box", price: 80, category: "Wala" },
+  { id: 16, name: "1000 Wala", unit: "1 Box", price: 125, category: "Wala" },
+  { id: 17, name: "2000 Wala", unit: "1 Box", price: 250, category: "Wala" },
+  { id: 18, name: "5000 Wala", unit: "1 Box", price: 625, category: "Wala" },
+
+  // Flash (bomb) Rops And Candles
+  { id: 19, name: "Hydro Bomb", unit: "1 BOX", price: 80, category: "Flash (bomb) Rops And Candles" },
+  { id: 20, name: "Classic Bomb", unit: "1 BOX", price: 100, category: "Flash (bomb) Rops And Candles" },
+  { id: 21, name: "King Of King", unit: "1 BOX", price: 150, category: "Flash (bomb) Rops And Candles" },
+  { id: 22, name: "Dts", unit: "1 Pcs", price: 250, category: "Flash (bomb) Rops And Candles" },
+  { id: 23, name: "Bullet", unit: "1 Box", price: 40, category: "Flash (bomb) Rops And Candles" },
+  { id: 24, name: "1.5 Feet Twinkling Star", unit: "1 BOX", price: 30, category: "Flash (bomb) Rops And Candles" },
+  { id: 25, name: "4 Feet Twinkling Star", unit: "1 BOX", price: 60, category: "Flash (bomb) Rops And Candles" },
+
+  // Chakkar
+  { id: 26, name: "4*4 wheel chakkar", unit: "1 Box", price: 120, category: "Chakkar" },
+  { id: 27, name: "Chakkar Big", unit: "1 BOX", price: 40, category: "Chakkar" },
+  { id: 28, name: "Chakkar Special", unit: "1 BOX", price: 100, category: "Chakkar" },
+  { id: 29, name: "Chakkar Deluxe", unit: "1 BOX", price: 120, category: "Chakkar" },
+  { id: 30, name: "Disco wheel", unit: "1 box", price: 60, category: "Chakkar" },
+  { id: 31, name: "SPINNER SUPER DELUXE", unit: "1 box", price: 200, category: "Chakkar" },
+  { id: 32, name: "Spinner Special", unit: "1 Box", price: 120, category: "Chakkar" },
+
+  // Flower Pots
+  { id: 33, name: "Small", unit: "1 Box", price: 30, category: "Flower Pots" },
+  { id: 34, name: "Big Pot", unit: "1 BOX", price: 50, category: "Flower Pots" },
+  { id: 35, name: "Special Pot", unit: "1 BOX", price: 70, category: "Flower Pots" },
+  { id: 36, name: "Ashoka Pot", unit: "1 BOX", price: 90, category: "Flower Pots" },
+  { id: 37, name: "Colour Kotti", unit: "1 BOX", price: 150, category: "Flower Pots" },
+  { id: 38, name: "Mega Colour Kotti", unit: "1 BOX", price: 200, category: "Flower Pots" },
+
+  // Rocket
+  { id: 39, name: "Super rocket", unit: "1 BOX", price: 60, category: "Rocket" },
+  { id: 40, name: "2 sound Rocket", unit: "1 BOX", price: 130, category: "Rocket" },
+  { id: 41, name: "Lunic Rocket", unit: "1 pcs", price: 120, category: "Rocket" },
+
+  // Stones
+  { id: 42, name: "Magic Pop", unit: "1 BOX", price: 12, category: "Stones" },
+  { id: 43, name: "Kit Kat", unit: "1 BOX", price: 20, category: "Stones" },
+
+  // Wishlers
+  { id: 44, name: "Siren", unit: "1 BOX", price: 176, category: "Wishlers" },
+
+  // Sky Display
+  { id: 45, name: "1 inch", unit: "1 pcs", price: 20, category: "Sky Display" },
+  { id: 46, name: "Chotta fancy 1.5 inch", unit: "1 pcs", price: 40, category: "Sky Display" },
+  { id: 47, name: "shot crack Jack", unit: "5 pcs", price: 30, category: "Sky Display" },
+  { id: 48, name: "2 Inch Fancy", unit: "1 BOX", price: 80, category: "Sky Display" },
+  { id: 49, name: "2 Inch Fancy (3 Pce)", unit: "1 BOX", price: 200, category: "Sky Display" },
+  { id: 50, name: "3 1/2 Inch Fancy", unit: "1 BOX", price: 200, category: "Sky Display" },
+  { id: 51, name: "4 Inch Fancy", unit: "1 BOX", price: 225, category: "Sky Display" },
+  { id: 52, name: "5 Inch Fancy", unit: "1 BOX", price: 250, category: "Sky Display" },
+  { id: 53, name: "5 Inch double", unit: "1 BOX", price: 500, category: "Sky Display" },
+
+  // Repeating Shots
+  { id: 54, name: "12 Shot Multi Colour", unit: "1 BOX", price: 120, category: "Repeating Shots" },
+  { id: 55, name: "30 Shot Multicolour", unit: "1 BOX", price: 280, category: "Repeating Shots" },
+  { id: 56, name: "60 Shot Multicolour", unit: "1 BOX", price: 560, category: "Repeating Shots" },
+  { id: 57, name: "100 Shot multi colour", unit: "1 BOX", price: 940, category: "Repeating Shots" },
+  { id: 58, name: "120 Shot Multicolour", unit: "1 BOX", price: 1120, category: "Repeating Shots" },
+  { id: 59, name: "240 Shot Multicolour", unit: "1 BOX", price: 2240, category: "Repeating Shots" },
+  { id: 60, name: "7shot", unit: "1 box", price: 200, category: "Repeating Shots" },
+
+  // Repeating Shots SPECIAL
+  { id: 61, name: "UV 30Shot Multicolour", unit: "1 Pcs", price: 350, category: "Repeating Shots SPECIAL" },
+  { id: 62, name: "UV 60Shot Multicolour", unit: "1 Pcs", price: 670, category: "Repeating Shots SPECIAL" },
+
+  // Fountain / Novelty Items
+  { id: 63, name: "Mega Ashrafi", unit: "5 in 1", price: 150, category: "Fountain & Novelty Items" },
+  { id: 64, name: "Ashrafi Kotti", unit: "1 BOX", price: 130, category: "Fountain & Novelty Items" },
+  { id: 65, name: "Miracle Pot", unit: "1 BOX", price: 130, category: "Fountain & Novelty Items" },
+  { id: 66, name: "Star drum", unit: "1 BOX", price: 200, category: "Fountain & Novelty Items" },
+  { id: 67, name: "Tri colour fountain", unit: "1 BOX", price: 200, category: "Fountain & Novelty Items" },
+  { id: 68, name: "Tri colour flash", unit: "1 BOX", price: 80, category: "Fountain & Novelty Items" },
+  { id: 69, name: "peacock Feather", unit: "1 BOX", price: 88, category: "Fountain & Novelty Items" },
+  { id: 70, name: "Colours Rain", unit: "1 BOX", price: 88, category: "Fountain & Novelty Items" },
+  { id: 71, name: "Top Gun", unit: "1 BOX", price: 160, category: "Fountain & Novelty Items" },
+  { id: 72, name: "Small peacock", unit: "1 BOX", price: 150, category: "Fountain & Novelty Items" },
+  { id: 73, name: "Panda", unit: "1 BOX", price: 30, category: "Fountain & Novelty Items" },
+  { id: 74, name: "Tin Series", unit: "1 BOX", price: 60, category: "Fountain & Novelty Items" },
+  { id: 75, name: "Bambaram", unit: "1 BOX", price: 80, category: "Fountain & Novelty Items" },
+  { id: 76, name: "Star Dom", unit: "1 BOX", price: 112, category: "Fountain & Novelty Items" },
+  { id: 77, name: "Helicopter", unit: "1 BOX", price: 104, category: "Fountain & Novelty Items" },
+  { id: 78, name: "Chotta Peacock", unit: "1 BOX", price: 90, category: "Fountain & Novelty Items" },
+  { id: 79, name: "Colour Smoke", unit: "1 BOX", price: 208, category: "Fountain & Novelty Items" },
+  { id: 80, name: "Water queen", unit: "1 BOX", price: 192, category: "Fountain & Novelty Items" },
+  { id: 81, name: "photo flash", unit: "1 BOX", price: 80, category: "Fountain & Novelty Items" },
+  { id: 82, name: "Bada Peacock", unit: "1 BOX", price: 360, category: "Fountain & Novelty Items" },
+  { id: 83, name: "Butterfly", unit: "1 BOX", price: 100, category: "Fountain & Novelty Items" },
+  { id: 84, name: "Lollipops", unit: "1 Box", price: 200, category: "Fountain & Novelty Items" },
+
+  // Sparklers
+  { id: 85, name: "Heart sparklers", unit: "1 Box", price: 200, category: "Sparklers" },
+  { id: 86, name: "7cm Electric", unit: "1 BOX", price: 7, category: "Sparklers" },
+  { id: 87, name: "7cm Colour", unit: "1 BOX", price: 12, category: "Sparklers" },
+  { id: 88, name: "Oothupathi", unit: "1 BOX", price: 10, category: "Sparklers" },
+  { id: 89, name: "10cm Electric", unit: "1 BOX", price: 10, category: "Sparklers" },
+  { id: 90, name: "10cm Colour", unit: "1 BOX", price: 18, category: "Sparklers" },
+  { id: 91, name: "12cm Electric", unit: "1 BOX", price: 22, category: "Sparklers" },
+  { id: 92, name: "12cm Colour", unit: "1 BOX", price: 24, category: "Sparklers" },
+  { id: 93, name: "15cm Electric", unit: "1 BOX", price: 38, category: "Sparklers" },
+  { id: 94, name: "15cm Colour", unit: "1 BOX", price: 40, category: "Sparklers" },
+  { id: 95, name: "30cm Electric", unit: "1 BOX", price: 38, category: "Sparklers" },
+  { id: 96, name: "30cm Colour", unit: "1 BOX", price: 40, category: "Sparklers" },
+  { id: 97, name: "50cm Electric", unit: "1 BOX", price: 148, category: "Sparklers" },
+  { id: 98, name: "50cm Colour", unit: "1 BOX", price: 156, category: "Sparklers" },
+
+  // Kids Special
+  { id: 99, name: "Super hero colour matches", unit: "1 Box", price: 250, category: "Kids Special" },
+  { id: 100, name: "Commondo colour matches", unit: "1 BOX", price: 150, category: "Kids Special" },
+  { id: 101, name: "Dhasara colour matches", unit: "1 BOX", price: 200, category: "Kids Special" },
+  { id: 102, name: "Butterfly colour matches", unit: "1 BOX", price: 120, category: "Kids Special" },
+  { id: 103, name: "7shot (5 pcs)", unit: "1 Box", price: 80, category: "Kids Special" },
+  { id: 104, name: "5shot", unit: "1 Box", price: 60, category: "Kids Special" },
+  { id: 105, name: "Sivakasi spl (3 pcs)", unit: "1 BOX", price: 200, category: "Kids Special" },
+
+  // Paper Bomb
+  { id: 106, name: "TDP power paper bomb", unit: "1 Pcs", price: 80, category: "Paper Bomb" },
+  { id: 107, name: "1/4 KGS PAPER BOMB", unit: "1 Pcs", price: 50, category: "Paper Bomb" },
+  { id: 108, name: "1/2 kgs Paper bomb", unit: "1 Pcs", price: 100, category: "Paper Bomb" },
+  { id: 109, name: "1 Kgs paper bomb", unit: "1 Pcs", price: 200, category: "Paper Bomb" },
+
+  // Gift Box
+  { id: 110, name: "36 items", unit: "1 BOX", price: 480, category: "Gift Box" }
+];
+
+const cart = {};
+let finalAmount = 0;
+
+function renderProducts() {
+  const container = document.getElementById("product-list");
+  let currentCategory = "";
+
+  products.forEach(item => {
+    if (item.category !== currentCategory) {
+      currentCategory = item.category;
+      const catImgSrc = categoryImages[currentCategory] || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80";
+      
+      const catHeader = document.createElement("div");
+      catHeader.className = "category-title";
+      catHeader.innerHTML = `<img src="${catImgSrc}" alt="${currentCategory}"> <span>${currentCategory}</span>`;
+      container.appendChild(catHeader);
+    }
+
+    const imgSrc = categoryImages[item.category] || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&q=80";
+
+    const row = document.createElement("div");
+    row.className = "item-card";
+    row.innerHTML = `
+      <img src="${imgSrc}" class="item-img" alt="${item.name}">
+      <div class="item-info">
+        <div class="item-name">${item.id}. ${item.name}</div>
+        <div class="item-price">₹${item.price} (${item.unit})</div>
+      </div>
+      <div class="controls">
+        <button class="btn-qty" onclick="changeQty(${item.id}, -1)">-</button>
+        <input type="number" id="qty-${item.id}" class="qty-input" value="0" min="0" oninput="manualQtyInput(${item.id}, this.value)">
+        <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
+      </div>
+      <div class="item-total" id="total-${item.id}">₹0</div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function changeQty(id, change) {
+  const currentVal = (cart[id] || 0) + change;
+  setQty(id, currentVal);
+}
+
+function manualQtyInput(id, value) {
+  const parsedVal = parseInt(value, 10);
+  if (isNaN(parsedVal) || parsedVal <= 0) delete cart[id];
+  else cart[id] = parsedVal;
+  updateUI();
+}
+
+function setQty(id, qty) {
+  if (qty <= 0) delete cart[id];
+  else cart[id] = qty;
+  updateUI();
+}
+
+function updateUI() {
+  let grandTotal = 0;
+  products.forEach(item => {
+    const qty = cart[item.id] || 0;
+    const input = document.getElementById(`qty-${item.id}`);
+    if (input && document.activeElement !== input) input.value = qty;
+    
+    const itemTotal = qty * item.price;
+    const totalDiv = document.getElementById(`total-${item.id}`);
+    if (totalDiv) totalDiv.innerText = "₹" + itemTotal;
+    
+    grandTotal += itemTotal;
+  });
+  finalAmount = grandTotal;
+  document.getElementById("grand-total-val").innerText = grandTotal;
+}
+
+function openConfirmationModal() {
+  if (Object.keys(cart).length === 0) {
+    alert("Please select or type a quantity for at least one item.");
+    return;
+  }
+  const nameInput = document.getElementById("cust-name").value.trim();
+  const phoneInput = document.getElementById("cust-phone").value.trim();
+  
+  const name = nameInput !== "" ? nameInput : "Guest Customer";
+  const phone = phoneInput !== "" ? phoneInput : "Not Provided";
+  
+  document.getElementById("modal-cust-info").innerHTML = `<b>Customer Name:</b> ${name} | <b>Phone:</b> ${phone}`;
+  renderModalSummary();
+  document.getElementById("confirm-modal").style.display = "flex";
+}
+
+function renderModalSummary() {
+  const container = document.getElementById("modal-summary-list");
+  container.innerHTML = "";
+  let grandTotal = 0;
+
+  Object.keys(cart).forEach(id => {
+    const item = products.find(p => p.id == id);
+    const qty = cart[id];
+    const total = qty * item.price;
+    grandTotal += total;
+
+    const row = document.createElement("div");
+    row.className = "summary-card";
+    row.innerHTML = `
+      <div style="flex:2;">
+        <div style="font-weight:bold; font-size:18px;">${item.name}</div>
+        <div style="color:#b91c1c; font-weight:bold;">₹${item.price} each</div>
+      </div>
+      <div class="controls">
+        <button class="btn-qty" onclick="changeQtyModal(${item.id}, -1)">-</button>
+        <input type="number" class="qty-input" value="${qty}" min="0" oninput="manualQtyInput(${item.id}, this.value); renderModalSummary();">
+        <button class="btn-qty" onclick="changeQtyModal(${item.id}, 1)">+</button>
+        <button class="btn-qty danger" style="width:40px; font-size:16px;" onclick="removeItemModal(${item.id})">✕</button>
+      </div>
+      <div style="font-size:20px; font-weight:bold; color:#15803d; min-width:70px; text-align:right;">₹${total}</div>
+    `;
+    container.appendChild(row);
+  });
+
+  finalAmount = grandTotal;
+  document.getElementById("modal-grand-total").innerText = grandTotal;
+}
+
+function changeQtyModal(id, change) {
+  changeQty(id, change);
+  if (Object.keys(cart).length === 0) closeModal("confirm-modal");
+  else renderModalSummary();
+}
+
+function removeItemModal(id) {
+  delete cart[id];
+  updateUI();
+  if (Object.keys(cart).length === 0) closeModal("confirm-modal");
+  else renderModalSummary();
+}
+
+function goToPayment() {
+  closeModal("confirm-modal");
+  document.getElementById("pay-amount").innerText = finalAmount;
+  document.getElementById("payment-modal").style.display = "flex";
+}
+
+function switchTab(e, tab) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".payment-panel").forEach(p => p.classList.remove("active"));
+  
+  e.target.classList.add("active");
+  document.getElementById(`tab-${tab}`).classList.add("active");
+}
+
+function applyCoupon() {
+  const code = document.getElementById("coupon-code").value.trim();
+  const msg = document.getElementById("coupon-msg");
+  if (code.toUpperCase() === "DURAI10") {
+    const discount = Math.round(finalAmount * 0.10);
+    finalAmount -= discount;
+    document.getElementById("pay-amount").innerText = finalAmount;
+    msg.style.color = "#15803d";
+    msg.innerText = `Success! ₹${discount} (10% OFF) discount applied.`;
+  } else {
+    msg.style.color = "#dc2626";
+    msg.innerText = "Invalid coupon code.";
+  }
+}
+
+function processPayment() {
+  const btn = document.getElementById("pay-btn");
+  btn.innerText = "Processing Payment...";
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.innerText = "Complete Payment";
+    btn.disabled = false;
+    closeModal("payment-modal");
+    
+    const randomTrx = "PAY-" + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById("trx-id").innerText = randomTrx;
+
+    document.getElementById("success-modal").style.display = "flex";
+  }, 1000);
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+// Prepare Compact Single-Page Printable Receipt Data
+function prepareReceipt() {
+  const nameInput = document.getElementById("cust-name").value.trim();
+  const phoneInput = document.getElementById("cust-phone").value.trim();
+
+  const name = nameInput !== "" ? nameInput : "Guest Customer";
+  const phone = phoneInput !== "" ? phoneInput : "Not Provided";
+
+  document.getElementById("pdf-cust-details").innerHTML = `
+    <span><b>Customer:</b> ${name}</span>
+    <span><b>Phone:</b> ${phone}</span>
+    <span><b>Date:</b> ${new Date().toLocaleDateString()}</span>
+  `;
+
+  const tbody = document.getElementById("pdf-table-body");
+  tbody.innerHTML = "";
+
+  Object.keys(cart).forEach(id => {
+    const item = products.find(p => p.id == id);
+    const qty = cart[id];
+    const total = qty * item.price;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.category}</td>
+      <td>${item.name}</td>
+      <td>₹${item.price}</td>
+      <td>${qty}</td>
+      <td>₹${total}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("pdf-total").innerText = `Grand Total: ₹${finalAmount}`;
+  return name;
+}
+
+// Triggers Printer Animation, then executes Print or Download
+function triggerPrintProcess(actionType) {
+  const custName = prepareReceipt();
+  const printModal = document.getElementById("printer-modal");
+  const title = document.getElementById("print-status-title");
+
+  title.innerText = actionType === 'download' ? "Printing PDF File..." : "Sending to Printer...";
+  printModal.style.display = "flex";
+
+  setTimeout(() => {
+    printModal.style.display = "none";
+
+    if (actionType === 'download') {
+      executePDFDownload(custName);
+    } else if (actionType === 'print') {
+      executeNativePrint();
+    }
+  }, 2200);
+}
+
+// Single-Page PDF Download Execution
+function executePDFDownload(name) {
+  const container = document.getElementById("pdf-container");
+  container.style.display = "block";
+  container.style.position = "fixed";
+  container.style.top = "0";
+  container.style.left = "0";
+  container.style.zIndex = "-1";
+
+  const element = document.getElementById("pdf-printable");
+
+  const options = {
+    margin: [5, 5, 5, 5],
+    filename: `Durai_Booking_${name.replace(/\s+/g, '_')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(options).from(element).save().then(() => {
+    container.style.display = "none";
+  }).catch(err => {
+    console.error("PDF generation error:", err);
+    container.style.display = "none";
+  });
+}
+
+// Native Web Printing Execution
+function executeNativePrint() {
+  const container = document.getElementById("pdf-container");
+  container.style.display = "block";
+  window.print();
+  container.style.display = "none";
+}
+
+renderProducts();
+</script>
+</body>
+</html>
